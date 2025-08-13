@@ -1,10 +1,10 @@
 use axum::{Router};
-use hyper::Server;
 use tower_http::cors::CorsLayer;
 use dotenvy::dotenv;
+use tokio::net::TcpListener;
 
-mod routes;
-mod utils;
+pub mod routes;
+pub mod utils;
 
 #[tokio::main]
 async fn main() {
@@ -12,11 +12,18 @@ async fn main() {
 
     let app=Router::new()
         .nest("/api/finance", routes::finance_routes())
-        .layer(utils::cors::build());
-    println!("Listening at http://0.0.0.0:8000");
+        .layer(utils::build());
 
-    Server::bind(&"0.0.0.0:8000".parse().unwrap())
-        .serve(app.into_make_service())
+    let route = "0.0.0.0:8000";
+
+    println!("Listening at http://{}", route);
+
+    let listener = TcpListener::bind(route)
         .await
-        .unwrap();
+        .expect("Failed to bind to address");
+
+    axum::serve(listener, app)
+        .await
+        .expect("Server failed");
+
 }
