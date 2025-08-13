@@ -1,23 +1,22 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [data, setData] = useState<string>("");
+
+	useEffect(() => {
+		fetch("http://192.168.86.72:8000/api/finance/test")
+		.then(res => res.text())
+		.then(setData)
+		.catch(err => console.error(err));
+	}, []);
 
   return (
-    <>
-      <div>
-      </div>
-      <h1>App.tsx</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+	  <div>
+	  	<h1> React Axum Test </h1>
+		<p>Backend says: {data}</p>
+	  </div>
+  );
 }
 
 export default App
