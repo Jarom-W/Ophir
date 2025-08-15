@@ -1,5 +1,4 @@
 use axum::{Router};
-use tower_http::cors::CorsLayer;
 use dotenvy::dotenv;
 use tokio::net::TcpListener;
 

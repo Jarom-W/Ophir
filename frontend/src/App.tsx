@@ -1,22 +1,29 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
 import { useState, useEffect } from 'react'
 import './App.css'
 
-function App() {
-	const [data, setData] = useState<string>("");
 
-	useEffect(() => {
-		fetch("http://192.168.86.72:8000/api/finance/test")
-		.then(res => res.text())
-		.then(setData)
-		.catch(err => console.error(err));
-	}, []);
+// Pages
 
-  return (
-	  <div>
-	  	<h1> React Axum Test </h1>
-		<p>Backend says: {data}</p>
-	  </div>
-  );
+import Home from "./pages/Home";
+import FinanceDashboard from "./pages/FinanceDashboard";
+import Applications from "./pages/Applications";
+import About from "./pages/About";
+import NotFound from "./pages/NotFound";
+
+export default function App() {
+	return(
+		<Router>
+			<MainLayout>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/finance" element={<FinanceDashboard />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/apps" element={<Applications />} />
+					<Route path="*" element={<NotFound />} />
+				</Routes>
+			</MainLayout>
+		</Router>
+	);
 }
-
-export default App

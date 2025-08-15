@@ -1,0 +1,125 @@
+.dashboard-container {
+  padding: 2rem;
+  color: gold;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+/* Search Section */
+.search-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.search-section input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #314d6a;
+  border-radius: 4px;
+  background-color: #102437;
+  color: gold;
+  font-size: 1rem;
+}
+
+.search-section input::placeholder {
+  color: #bfae6f;
+}
+.search-section input:hover {
+	transition: 0.15s;
+	transform: translate(0, -2px);
+}
+
+.search-section button {
+  background-color: #1d4ed8;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-section button:hover {
+  background-color: #2563eb;
+
+  transform: translate(0, -2px);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: #15304D;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  border: 1px solid #314d6a;
+}
+.stat-card:hover {
+	transition: 0.15s;
+	background-color: #1D4168;
+
+	transform: translate(0, -2px);
+}
+	
+
+.stat-card h3 {
+  font-size: 0.9rem;
+  color: #bfae6f;
+}
+
+.stat-card p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: gold;
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.content-card {
+  background-color: #15304D;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  border: 1px solid #314d6a;
+}
+.content-card:hover {
+	transition: 0.15s;
+	background-color: #1D4168;
+
+	transform: translate(0, -2px);
+}
+
+.chart-placeholder {
+  height: 200px;
+  background-color: #102437;
+  border: 1px dashed #314d6a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bfae6f;
+}
+
+/* News Section */
+.news-section ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+
+.news-section li {
+  margin-bottom: 0.5rem;
+  color: gold;
+}
