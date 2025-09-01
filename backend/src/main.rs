@@ -10,7 +10,7 @@ async fn main() {
     dotenv().ok();
 
     let app=Router::new()
-        .nest("/api/finance", routes::finance_routes())
+        .nest("/api", routes::finance_routes())
         .layer(utils::build());
 
     let route = "0.0.0.0:8000";

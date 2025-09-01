@@ -7,7 +7,7 @@ import './App.css'
 // Pages
 
 import Home from "./pages/Home";
-import FinanceDashboard from "./pages/FinanceDashboard";
+import Dash from "./pages/Dash";
 import Applications from "./pages/Applications";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -18,7 +18,7 @@ export default function App() {
 			<MainLayout>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/finance" element={<FinanceDashboard />} />
+					<Route path="/finance" element={<Dash />} />
 					<Route path="/about" element={<About />} />
 					<Route path="/apps" element={<Applications />} />
 					<Route path="*" element={<NotFound />} />
