@@ -3,7 +3,9 @@ use dotenvy::dotenv;
 use tokio::net::TcpListener;
 
 pub mod routes;
+pub mod models;
 pub mod utils;
+pub mod error;
 
 #[tokio::main]
 async fn main() {
