@@ -1,6 +1,6 @@
 use axum::{Router,extract::Query,routing::get,Json, response::IntoResponse};
 use std::collections::HashMap;
-use crate::models::{SearchParams, Company, Filing};
+use crate::models::{SearchParams, Company};
 use crate::error::AppError;
 use std::env;
 use serde_json::Value;
@@ -12,6 +12,16 @@ pub fn finance_routes() -> Router {
         .route("/fundamentals", get(retrieve_fundamentals))
         .route("/last_quarter/:cik", get(last_quarter))
 }
+/* Data fetching logic:
+ * User queries a ticker for fundamentals
+ * Backend checks database for entry. 
+ * If entry exists, then it checks to see if the date stamped on the data is the most recent
+ * quarter
+ * This is accomplished by querying the SEC endpoint and corroborating the last filing/quarter
+ * date.
+ */
+
+//SEC Fields: primaryDocDescription + tickers
 
 pub async fn last_quarter(axum::extract::Path(cik): axum::extract::Path<String>) -> Result<impl IntoResponse, AppError> {
     let url = format!("https://data.sec.gov/submissions/CIK{}.json", cik);

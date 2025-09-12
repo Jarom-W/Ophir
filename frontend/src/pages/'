@@ -1,0 +1,24 @@
+import React from "react";
+import "../styles/FinanceDashboard.css";
+export default function Applications () {
+	return (
+		<div className="container">
+			<div className="header">
+				<h2>Apps</h2></div>
+			<div className="menu">
+				<a href="#">Link 1</a>
+				<br></br>
+				<a href="#">Link 2</a>
+				<br></br>
+				<a href="#">Link 3</a>
+				</div>
+			<div className="content">
+				<h3>Lorem Ipsum</h3>
+				<p>Lorem ipsum odor amet, consectetuer adipiscing elit. Ridiculus sit nisl laoreet facilisis aliquet. Potenti dignissim litora eget montes rhoncus sapien neque urna. Cursus libero sapien integer magnis ligula lobortis quam ut.</p>
+				</div>
+			<div className="footer">
+				<h4>Footer</h4>
+				</div>
+		</div>
+	);
+}

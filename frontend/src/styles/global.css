@@ -1,3 +1,11 @@
+:root {
+  --color-navy: #0d1b2a;
+  --color-gold: #e6c229;
+  --color-gray: #778da9;
+  --color-sand: #edf2f4;
+  --color-black: #000000;
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -26,8 +34,8 @@ a:hover {
 }
 
 main {
-	padding: 1rem;
-	min-height: 80vh;
+	padding: .5rem;
+	height: 100vh;
 }
 
 nav {
@@ -37,11 +45,18 @@ nav {
 }
 
 nav a {
-	color: gold;
+	transition: .2s;
+	color: var(--color-gold);
+	padding: .5rem;
+	border-radius: .25rem;
+	text-decoration: none;
+	font-size: 20px;
 }
 
 nav a:hover {
 	color: #93c5fd;
+	transition: .2s;
+	background: var(--color-sand);
 	}
 
 button {

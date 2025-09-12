@@ -19,6 +19,8 @@ export default function Dash() {
 	const [loading, setLoading] = useState<boolean>(false);
 	// Used to hold the suggested results as the user is typing tickers.
 	const [suggestions, setSuggestions] = useState<Company[]>([]);
+	// Used to handle when tickers aren't found
+	const [companyNotFound, setCompanyNotFound] = useState<boolean>(false);
 
 	// Write a useEffect to fetch suggestions whenever the ticker field is changed.
 	useEffect(() => {
@@ -31,10 +33,7 @@ export default function Dash() {
 				const res = await fetch(`${API_URL}/search?ticker=${ticker}`);
 				if (res.ok) {
 					const data = await res.json();
-					console.log(data);
 					setSuggestions(data);
-					console.log(suggestions);
-					console.log(ticker);
 				}
 			} catch (err) {
 				console.error("Suggestion fetch failed for ", err);
@@ -53,22 +52,26 @@ export default function Dash() {
 		setTicker(symbol);
 		setSuggestions([]);
 		setCompanies([{ cik_str, ticker: symbol, title }]);
+		setTicker("");
 	};
 
 	const searchTicker = async() => {
-
+		setCompanyNotFound(false);
 		setLoading(true);
 		setCompanies([]);
 
 		try {
+			//Probably need to modify this endpoint to send ONE request to fetch ticker and last_filing date
 			const res = await fetch(`${API_URL}/search?ticker=${ticker}`);
 			if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
 			const data = await res.json();
 			setCompanies(data);
+			setTicker("");
 			console.log(data);
 		} catch (err) {
 			console.error("Fetch error:", err);
+			setCompanyNotFound(true);
 		} finally {
 			setLoading(false);
 		}
@@ -116,7 +119,14 @@ export default function Dash() {
       {loading && <p>Loading...</p>}
 
 	</div>
-
+      {companyNotFound && (
+	<div className="company-title-not-found">
+		<div className="company-name-container">
+		<h2>Sorry, we couldn't find that ticker.</h2>
+		</div>
+	</div>
+		
+      )}
       {companies.length >0 && (
       	<div className="company-title">
 		<div className="company-name-container">

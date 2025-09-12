@@ -11,14 +11,6 @@ pub struct Company {
 pub struct SearchParams {
     pub ticker: String,
 }
-#[derive(serde::Serialize)]
-pub struct Filing {
-    pub form: String,
-    pub filing_date: String,
-    pub report_date: String,
-    pub accession_number: String,
-}
-
 
 
 
