@@ -6,12 +6,18 @@
 h1 {
   margin-bottom: 1rem;
 }
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
 
 /* Search Section */
 .search-section {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
+  justify-content: center;
 }
 .search-section input {
   flex: 1;
@@ -21,6 +27,7 @@ h1 {
   background-color: #102437;
   color: gold;
   font-size: 1rem;
+  width: 50vw;
 }
 
 .search-section input::placeholder {
@@ -44,6 +51,23 @@ h1 {
   background-color: #2563eb;
 
   transform: translate(0, -2px);
+
+}
+.search-results-container {
+	display: flex;
+	justify-content: center;
+}
+.search-results {
+	background-color: white;
+	margin-bottom: 1rem;
+	border-radius: 4px;
+	width: 50vw;
+
+}
+.search-results-text {
+	color: black;
+	margin-left: 1rem;
+	text-align: left;
 }
 
 /* Stats Grid */
@@ -122,4 +146,9 @@ h1 {
 .news-section li {
   margin-bottom: 0.5rem;
   color: gold;
+}
+.company-title {
+	padding: 1rem;
+	margin: 1rem;
+	border-bottom: 1px solid;
 }

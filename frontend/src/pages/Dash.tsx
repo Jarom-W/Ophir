@@ -5,9 +5,9 @@ import "../styles/FinanceDashboard.css";
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface Company {
-	id: number;
-	name: string;
+	cik_str: u64;
 	ticker: string;
+	title: string;
 }
 
 export default function Dash() {
@@ -28,10 +28,13 @@ export default function Dash() {
 				return;
 			}
 			try {
-				const res = await fetch(`${API_URL}/companies?ticker=${ticker}`);
+				const res = await fetch(`${API_URL}/search?ticker=${ticker}`);
 				if (res.ok) {
 					const data = await res.json();
+					console.log(data);
 					setSuggestions(data);
+					console.log(suggestions);
+					console.log(ticker);
 				}
 			} catch (err) {
 				console.error("Suggestion fetch failed for ", err);
@@ -46,21 +49,24 @@ export default function Dash() {
 		setTicker(event.target.value);
 	};
 
-	const handleSuggestionClick = (symbol: string) => {
+	const handleSuggestionClick = (symbol: string, title: string, cik_str: string  ) => {
 		setTicker(symbol);
 		setSuggestions([]);
+		setCompanies([{ cik_str, ticker: symbol, title }]);
 	};
 
 	const searchTicker = async() => {
 
 		setLoading(true);
+		setCompanies([]);
 
 		try {
-			const res = await fetch(`${API_URL}/companies?ticker=${ticker}`);
+			const res = await fetch(`${API_URL}/search?ticker=${ticker}`);
 			if (!res.ok) throw new Error(`HTTP error ${res.status}`);
 
 			const data = await res.json();
 			setCompanies(data);
+			console.log(data);
 		} catch (err) {
 			console.error("Fetch error:", err);
 		} finally {
@@ -75,51 +81,49 @@ export default function Dash() {
       <h1></h1>
 
       {/* Search Bar */}
-      <div className="flex items-start gap-2 w-96">
-      	<div className="relative flex-1">
+      <div className="search-section">
+      	<div>
         <input
        		type="text" 
 		placeholder="Enter Ticker Symbol (e.g., AAPL)"
 		onChange={handleChange}	       
 		value={ticker}
-		className="border rounded p-2 w-full"
 		/>
-
-	{/* Dropdown suggestions */}
-	{suggestions.length > 0 && (
-		<ul className="absolute bg-white border rounded w-full mt-1 shadow-lg z-10">
-			{suggestions.map((c) => (
-				<li
-					key={c.ticker}
-					className="p-2 hover:bg-gray-100 cursor-pointer"
-					onClick={() => handleSuggestionClick(c.ticker)}
-				>
-				{c.ticker} - {c.name}
-				</li>
-			))}
-		</ul>
-	)}
-	
       </div>
 
 	<button
 		onClick={searchTicker}
-		className="ml-2 bg-blue-500 text-white px-3 py-1 rounded"
 		>Search</button>
 	</div>
       {/* Results */}
-      <div className="results mt-4">
-      	{loading && <p>Loading...</p>}
-	{!loading && companies.length > 0 && (
-		<ul>
-			{companies.map((c) => (
-				<li key={c.ticker}>
-					{c.ticker} - {c.name}
+      <div className="search-results-container">
+      {!loading && (ticker.length > 1) && (suggestions.length > 0) && (
+
+	      <div className="search-results">
+	      <div className="search-results-text">
+	      	<ul>
+			{suggestions.map((s) => (
+				<li key={s.ticker} onClick={()=> handleSuggestionClick(s.ticker, s.title, s.cik_str)}>
+					{s.ticker} - {s.title}
 				</li>
 			))}
 		</ul>
-	)}
+	      </div>
+	      </div>
+      
+      )}
+
+      {loading && <p>Loading...</p>}
+
 	</div>
+
+      {companies.length >0 && (
+      	<div className="company-title">
+		<div className="company-name-container">
+		<h2>{companies[0].title}</h2>
+		</div>
+	</div>
+      )}
 
       {/* Key Stats */}
       <div className="stats-grid">
@@ -148,7 +152,7 @@ export default function Dash() {
           <p>28.3</p>
         </div>
       </div>
-
+	
       {/* Company Profile + Chart */}
       <div className="content-grid">
         <div className="content-card">
