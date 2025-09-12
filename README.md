@@ -8,9 +8,9 @@
 
   ## Description:
 
-  Data is gold in the 21st century. For this reason, large data brokers like exchanges and news outlets charge enormous premiums to gain access to their data. While real-time quantitative data will remain expensive and gatekept, sentiment analysis remains a free source to understand the individuals that actually comprise the market.
+  Data is gold in the 21st century. For this reason, large data brokers like exchanges and news outlets charge enormous premiums to gain access to their data. While real-time quantitative data will remain expensive and gatekept, sentiment analysis remains a free source to understand the individuals that actually comprise the market with various methods of obtaining and aggregating human sentiment publicly available.
 
-Ophir seeks to provide open-source financial tools to help investors make the best financial decisions possible. Leveraging sentiments, fundamentals, technicals, historicals, and other data sources from every corner of the internet.
+Ophir seeks to provide open-source financial tools to help investors make the best financial decisions possible. The flagship feature of this app is the Application interface. Users can create customized apps with a simple drag and drop experience. Many tools exist to create custom indicators and features, but these are often gatekept whether behind large paywalls, or simply sheer complexity of having to learn to program in a language like Python or custom languages like PineScript. This project aims to be a solution to the investor who desires custom tools without having to learn extensive computer or data science - enabling them to invest and catch the waves of today instead of waiting for another in the future.
 
 Below are some features ChatGPT gathered from the internet of tools people are looking for:
 
