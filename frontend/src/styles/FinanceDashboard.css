@@ -208,3 +208,10 @@ ul {
 	background-color: var(--color-navy);
 
 }
+.blocks-container {
+  color: var(--color-navy);
+}
+.blocks-heading {
+  color: var(--color-sand);
+  text-align: center;
+}

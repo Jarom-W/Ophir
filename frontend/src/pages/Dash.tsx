@@ -49,6 +49,7 @@ export default function Dash() {
 	};
 
 	const handleSuggestionClick = (symbol: string, title: string, cik_str: string  ) => {
+		setCompanyNotFound(false);
 		setTicker(symbol);
 		setSuggestions([]);
 		setCompanies([{ cik_str, ticker: symbol, title }]);
