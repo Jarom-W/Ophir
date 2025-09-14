@@ -1,5 +1,6 @@
 // Sidebar.tsx
 import React from "react";
+import "../styles/FinanceDashboard.css"
 
 export default function Sidebar() {
   const onDragStart = (event: React.DragEvent, nodeType: string, label: string, code: string) => {
@@ -8,12 +9,12 @@ export default function Sidebar() {
   };
 
   return (
-    <aside style={{ padding: "1rem", borderRight: "1px solid #ccc" }}>
+    <aside className="nodes-sidebar">
       <h4 className="blocks-heading">Drag Nodes</h4>
       <div
         onDragStart={(e) => onDragStart(e, "codeNode", "Print 'Hello World'", `console.log("Hello World");`)}
         draggable
-        style={{ padding: "8px", margin: "4px 0", background: "#eee", cursor: "grab" }}
+        className="sidebar-node-label"
       >
         Print Node
       </div>
@@ -21,9 +22,17 @@ export default function Sidebar() {
       <div
         onDragStart={(e) => onDragStart(e, "codeNode", "Set x = 5", `let x = 5; console.log("x =", x);`)}
         draggable
-        style={{ padding: "8px", margin: "4px 0", background: "#eee", cursor: "grab" }}
+        className="sidebar-node-label"
       >
         Variable Node
+      </div>
+
+      <div
+        onDragStart={(e) => onDragStart(e, "codeNode", "Print 'Working'", `let x = "Working"; console.log("x =", x);`)}
+        draggable
+        className="sidebar-node-label"
+      >
+        Print "Working"
       </div>
     </aside>
   );

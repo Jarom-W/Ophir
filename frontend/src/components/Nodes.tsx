@@ -1,5 +1,6 @@
 import React from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
+import "../styles/FinanceDashboard.css";
 
 type CodeNodeData = {
   label: string;
@@ -11,8 +12,8 @@ type CodeNodeData = {
 
 export default function CodeNode({ id, data }: NodeProps<CodeNodeData>) {
   return (
-    <div style={{ padding: "10px", border: "1px solid #333", borderRadius: "8px", background: "#f9f9f9" }}>
-      <div style={{ fontWeight: "bold", marginBottom: "6px" }}>{data.label}</div>
+    <div className="node-main">
+      <div className="node-header">{data.label}</div>
 
       {data.isStart ? (
         <button

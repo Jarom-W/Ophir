@@ -175,18 +175,24 @@ ul {
   
 }
 .container > div {
-  background: linear-gradient(180deg, #0d1b2a,#15304D);
+  background-color: transparent;
   padding: 10px;
 }
 .container > div.header {
   grid-area: header;
   text-align: center;
+  font-size: 1rem;
+  
 }
 .container > div.menu {
   grid-area: menu;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
 }
 .container > div.content {
   grid-area: content;
+  border: 1px dotted white;
 }
 .container > div.footer {
   grid-area: footer;
@@ -201,7 +207,11 @@ ul {
 	justify-content: center;
 	text-align: center;
 	align-items: center;
-	height: 20vh;
+	height: 15vh;
+  width: 12vw;
+  padding: .5rem;
+  margin: .5rem;
+
 }
 .new-application:hover {
 	transition: .2s;
@@ -210,8 +220,39 @@ ul {
 }
 .blocks-container {
   color: var(--color-navy);
+  display: flex;
+  justify-content: center;
 }
 .blocks-heading {
   color: var(--color-sand);
+  text-align: center;
+}
+.node-main {
+	background: var(--color-sand);
+  padding: 1rem;
+  border-radius: .25rem;
+}
+.node-header {
+  text-align: center;
+  color: var(--color-navy);
+  margin-bottom: .25rem;
+}
+.sidebar-node-label {
+  transition: .2s;
+  padding: .5rem;
+  margin: .5rem;
+  background: var(--color-sand);
+  cursor: "grab";
+  border-radius: .25rem;
+  height: 15vh;
+  width: 12vw;
+}
+.sidebar-node-label:hover {
+  transition: .2s;
+  background-color: var(--color-gold);
+}
+.nodes-sidebar {
+  padding: 0;
+  margin: 0;
   text-align: center;
 }
