@@ -16,7 +16,8 @@ import "reactflow/dist/style.css";
 import "../styles/FinanceDashboard.css";
 
 import Sidebar from "../components/Sidebar.tsx";
-import CodeNode from "../components/Nodes.tsx";
+import CodeNode, { DataNode } from "../components/Nodes.tsx";
+
 
 const initialNodes: Node[] = [
   {
@@ -25,11 +26,25 @@ const initialNodes: Node[] = [
     data: { label: "App Start", code: `console.log("Start");`, isStart: true },
     position: { x: 250, y: 0 },
   },
+  {
+    id: "2",
+    type: "dataNode",
+    data: {
+      label: "Get Users",
+      method: "GET",
+      endpoint: "/api/users",
+      onExecute: (method, endpoint, body) => {
+        console.log("Executing:", method, endpoint, body);
+        // Example: fetch(endpoint, { method, body })
+      },
+    },
+    position: { x: 250, y: 150 },
+  },
 ];
 
 const initialEdges: Edge[] = [];
 
-const nodeTypes = { codeNode: CodeNode };
+const nodeTypes = { codeNode: CodeNode, dataNode: DataNode,};
 
 export default function Applications() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -56,7 +71,7 @@ const runChain = (startId: string) => {
 
   const visited = new Set<string>();
 
-  const executeNode = (id: string) => {
+  const executeNode = async (id: string) => {
     if (visited.has(id)) return; // prevent infinite loops
     visited.add(id);
 
@@ -72,43 +87,89 @@ const runChain = (startId: string) => {
       )
     );
 
-    // run node’s code
-    const code = (node.data as any).code;
-    if (code) runCode(code);
+    // branch by type
+    if (node.type === "codeNode") {
+      const code = (node.data as any).code;
+      if (code) {
+        try {
+          // eslint-disable-next-line no-eval
+          eval(code);
+        } catch (err) {
+          console.error("Execution error:", err);
+        }
+      }
+    } else if (node.type === "dataNode") {
+      const { method, endpoint, body } = node.data as any;
+      try {
+        const res = await fetch(endpoint, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: method !== "GET" ? body : undefined,
+        });
+        const json = await res.json().catch(() => null);
+        console.log(`📡 ${method} ${endpoint}`, json || res.status);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      }
+    }
 
-    // pick the first outgoing edge (linear chain)
-    const outgoing = edges.find((e) => e.source === id);
-    if (outgoing) executeNode(outgoing.target);
+    // continue chain with outgoing edges
+    const outgoing = edges.filter((e) => e.source === id);
+    for (const e of outgoing) {
+      await executeNode(e.target);
+    }
   };
+
   executeNode(startId);
 };
 
 
+
   const onDrop = useCallback(
-    (event: React.DragEvent) => {
-      event.preventDefault();
-      const reactFlowBounds = event.currentTarget.getBoundingClientRect();
-      const data = event.dataTransfer.getData("application/reactflow");
-      if (!data) return;
+  (event: React.DragEvent) => {
+    event.preventDefault();
+    const reactFlowBounds = event.currentTarget.getBoundingClientRect();
+    const raw = event.dataTransfer.getData("application/reactflow");
+    if (!raw) return;
 
-      const { type, label, code } = JSON.parse(data);
+    const { type, label, code, method, endpoint, body } = JSON.parse(raw);
 
-      const position = {
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      };
+    const position = {
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top,
+    };
 
-      const newNode: Node = {
-        id: (nodes.length + 1).toString(),
-        type,
-        position,
-        data: { label, code },
-      };
+    const newNode: Node = {
+      id: (nodes.length + 1).toString(),
+      type,
+      position,
+      data:
+        type === "codeNode"
+          ? { label, code }
+          : {
+              label,
+              method,
+              endpoint,
+              body,
+              onExecute: (method: string, endpoint: string, body?: string) => {
+                fetch(endpoint, {
+                  method,
+                  headers: { "Content-Type": "application/json" },
+                  body: method !== "GET" ? body : undefined,
+                })
+                  .then((res) => res.json().catch(() => res.status))
+                  .then((json) => console.log("📡 Response:", json))
+                  .catch((err) => console.error("Fetch error:", err));
+              },
+            },
+    };
 
-      setNodes((nds) => nds.concat(newNode));
-    },
-    [nodes, setNodes]
-  );
+    setNodes((nds) => nds.concat(newNode));
+  },
+  [nodes, setNodes]
+);
+
+
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
