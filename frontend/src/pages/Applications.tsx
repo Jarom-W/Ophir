@@ -16,7 +16,8 @@ import "reactflow/dist/style.css";
 import "../styles/FinanceDashboard.css";
 
 import Sidebar from "../components/Sidebar.tsx";
-import CodeNode, { DataNode } from "../components/Nodes.tsx";
+import type { NodeTemplate } from "../components/Sidebar.tsx";
+import CodeNode, { DataNode, IfNode } from "../components/Nodes.tsx";
 
 
 const initialNodes: Node[] = [
@@ -30,16 +31,26 @@ const initialNodes: Node[] = [
 
 const initialEdges: Edge[] = [];
 
-const nodeTypes = { codeNode: CodeNode, dataNode: DataNode,};
+const nodeTypes = { codeNode: CodeNode, dataNode: DataNode, ifNode: IfNode};
 
 export default function Applications() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
-  );
+  (params: Edge | Connection) => {
+    if (!params.source || !params.target) return;
+
+    // preserve handles if they exist
+    const edge = {
+      ...params,
+      id: `reactflow__edge-${params.source}-${params.target}${params.sourceHandle ? '-' + params.sourceHandle : ''}${params.targetHandle ? '-' + params.targetHandle : ''}`
+    };
+
+    setEdges((eds) => addEdge(edge, eds));
+  },
+  [setEdges]
+);
 
 const updateNode = (id: string, updates: any) => {
   setNodes(nds =>
@@ -59,13 +70,14 @@ const updateNode = (id: string, updates: any) => {
   };
 
  // Execute all nodes in chain starting from given nodeId
-const runChain = (startId: string) => {
+
+  const runChain = (startId: string) => {
   console.log("Running chain from:", startId);
 
   const visited = new Set<string>();
 
   const executeNode = async (id: string) => {
-    if (visited.has(id)) return; // prevent infinite loops
+    if (visited.has(id)) return;
     visited.add(id);
 
     const node = nodes.find((n) => n.id === id);
@@ -75,7 +87,7 @@ const runChain = (startId: string) => {
     setNodes((nds) =>
       nds.map((n) =>
         n.id === id
-          ? { ...n, style: { ...n.style, border: "2px solid green" } }
+          ? { ...n, style: { ...n.style, border: "5px solid green", borderRadius: "8px" } }
           : n
       )
     );
@@ -85,7 +97,6 @@ const runChain = (startId: string) => {
       const code = (node.data as any).code;
       if (code) {
         try {
-          // eslint-disable-next-line no-eval
           eval(code);
         } catch (err) {
           console.error("Execution error:", err);
@@ -104,6 +115,31 @@ const runChain = (startId: string) => {
       } catch (err) {
         console.error("Fetch error:", err);
       }
+    } else if (node.type === "ifNode") {
+      const condition = (node.data as any).condition?.trim();
+      if (!condition) {
+        console.log(`⚠️ IF node ${node.id} has no condition, passing by default.`);
+        return;
+      }
+
+      let result = false;
+      try {
+        const context: Record<string, any> = { x: 11 };
+        const argNames = Object.keys(context);
+        const argValues = Object.values(context);
+
+        const func = new Function(...argNames, `return ${condition};`);
+        result = !!func(...argValues);
+      } catch (err) {
+        console.error(`IF node ${node.id} evaluation error:`, err);
+      }
+
+      if (!result) {
+        console.log(`⛔ IF node ${node.id} stopped execution.`);
+        return; // STOP chain
+      } else {
+        console.log(`✅ IF node ${node.id} passed.`);
+      }
     }
 
     // continue chain with outgoing edges
@@ -113,8 +149,10 @@ const runChain = (startId: string) => {
     }
   };
 
+  // **Call executeNode outside its definition**
   executeNode(startId);
 };
+
 const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     const reactFlowBounds = event.currentTarget.getBoundingClientRect();
@@ -184,6 +222,15 @@ const onNodesDelete = useCallback(
 
 useEffect(() => {
   const handleKeyDown = (e: KeyboardEvent) => {
+    // Only act if the focus is NOT in an input, textarea, or contenteditable
+    const target = e.target as HTMLElement;
+    const isInputFocused =
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable;
+
+    if (isInputFocused) return;
+
     if (e.key === "Delete" || e.key === "Backspace") {
       const selected = nodes.filter((n: any) => n.selected);
 
@@ -194,16 +241,10 @@ useEffect(() => {
         return;
       }
 
-      // Otherwise, delete normally
-      const remainingNodes = nodes.filter(
-        (n) => !selected.includes(n)
-      );
-
+      // Delete selected nodes
+      const remainingNodes = nodes.filter((n) => !selected.includes(n));
       const remainingEdges = edges.filter(
-        (e) =>
-          !selected.some(
-            (n) => n.id === e.source || n.id === e.target
-          )
+        (edge) => !selected.some((n) => n.id === edge.source || n.id === edge.target)
       );
 
       setNodes(remainingNodes);
@@ -216,62 +257,55 @@ useEffect(() => {
 }, [nodes, edges]);
 
 
+const nodeSet1: NodeTemplate[] = [
+  
+  { type: "dataNode", label: "GET Data", method: "GET", endpoint: "" },
+  { type: "dataNode", label: "POST Data", method: "POST", endpoint: "", body: `{"key":"value"}` },
+  { type: "dataNode", label: "DELETE Data", method: "DELETE", endpoint: "" },
+];
+
+const nodeSet2: NodeTemplate[] = [
+  { type: "ifNode", label: "If", condition: "x > 10"},
+  { type: "codeNode", label: "Logger", code: `console.log("Logging");` },
+  
+];
+
+const [currentNodeSet, setCurrentNodeSet] = useState<"set1" | "set2">("set1");
+
+// Choose which nodes to display
+const nodesToShow = currentNodeSet === "set1" ? nodeSet1 : nodeSet2;
+
   return (
-    <div className="main-container" style={{ display: "flex", height: "100vh" }}>
-      {/* Sidebar with draggable items */}
-      
+    <div className="main-container">
+            <div className="sidebar-wrapper">
+              <Sidebar nodes={nodesToShow} />
+              <div style={{ display: "flex", justifyContent: "space-around" }}>
+                <button onClick={() => setCurrentNodeSet("set1")}>Data Sourcing</button>
+                <button onClick={() => setCurrentNodeSet("set2")}>App Logic</button>
+              </div>
+            </div>
 
-      <div className="container" style={{ flex: 1 }}>
-        <div className="header">
-          <h2>Custom Applications</h2>
-        </div>
-		<div className="menu">
-				<div className="sidebar-container">
-					<div className="app-container">
-					<div className="new-application">
-					+
-					</div>
-					<div className="blocks-container">
-					<Sidebar />
-					</div>
-				</div>
-				</div>
-				</div>
-
-        <div className="content">
-          <div style={{ width: "100%", height: "90vh" }}>
-            <ReactFlow
-              nodes={nodes.map((n)=> ({
-				...n,
-				data: {
-					...n.data,
-					onRun: runCode,
-					onRunChain: runChain,
-					onUpdate: updateNode,
-				},
-			  }))}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-			  //onNodesDelete={onNodesDelete}
-			  deleteKeyCode={null}
-              onConnect={onConnect}
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              fitView
-			  nodeTypes={nodeTypes}
-			  
-            >
-              <MiniMap />
-              <Background />
-            </ReactFlow>
-          </div>
-        </div>
-
-        <div className="footer">
-          <h4>Footer</h4>
-        </div>
+            <div className="reactflow-wrapper">
+              <ReactFlow
+                nodes={nodes.map(n => ({
+                  ...n,
+                  data: { ...n.data, onRun: runCode, onRunChain: runChain, onUpdate: updateNode },
+                }))}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                deleteKeyCode={null}
+                fitView
+                nodeTypes={nodeTypes}
+                style={{ width: "100%", height: "100%" }}
+              >
+                <MiniMap />
+                <Background />
+              </ReactFlow>
+            </div>
       </div>
-    </div>
   );
 }
