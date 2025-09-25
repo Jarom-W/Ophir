@@ -1,95 +1,74 @@
 import React from "react";
-import "../styles/FinanceDashboard.css";
+
+const methodColors: Record<string, string> = {
+  GET: "#4CAF50",
+  POST: "#2196F3",
+  PUT: "#FFC107",
+  DELETE: "#F44336",
+};
+
+const nodeTemplates = [
+  { type: "codeNode", label: "Logger", code: `console.log("Logging");` },
+  { type: "dataNode", label: "GET Data", method: "GET", endpoint: "" },
+  { type: "dataNode", label: "POST Data", method: "POST", endpoint: "", body: `{"key":"value"}` },
+  { type: "dataNode", label: "PUT Data", method: "PUT", endpoint: "", body: `{"update":"value"}` },
+  { type: "dataNode", label: "DELETE Data", method: "DELETE", endpoint: "" },
+];
 
 export default function Sidebar() {
-  // define onDragStart once
-  const onDragStart = (
-    event: React.DragEvent,
-    nodeType: string,
-    payload: Record<string, any>
-  ) => {
-    event.dataTransfer.setData(
-      "application/reactflow",
-      JSON.stringify({ type: nodeType, ...payload })
-    );
-    event.dataTransfer.effectAllowed = "move";
-  };
-
   return (
-    <aside className="nodes-sidebar">
-      <h4 className="blocks-heading">Drag Nodes</h4>
-
-      {/* Code Nodes */}
-      <div
-        onDragStart={(e) =>
-          onDragStart(e, "codeNode", {
-            label: "Print 'Hello World'",
-            code: `console.log("Hello World");`,
-          })
-        }
-        draggable
-        className="sidebar-node-label"
-      >
-        Print Node
-      </div>
-
-      <div
-        onDragStart={(e) =>
-          onDragStart(e, "codeNode", {
-            label: "Set x = 5",
-            code: `let x = 5; console.log("x =", x);`,
-          })
-        }
-        draggable
-        className="sidebar-node-label"
-      >
-        Variable Node
-      </div>
-
-      <div
-        onDragStart={(e) =>
-          onDragStart(e, "codeNode", {
-            label: 'Print "Working"',
-            code: `let x = "Working"; console.log("x =", x);`,
-          })
-        }
-        draggable
-        className="sidebar-node-label"
-      >
-        Print "Working"
-      </div>
-
-      <div
-        onDragStart={(e) =>
-          onDragStart(e, "dataNode", {
-              label: "Pull SEC Data",
-              method: "GET",
-              endpoint: "https://data.sec.gov/submissions/CIK0000320193.json",
-              headers: {
-                "User-Agent": "JaromWardwell (jaromwardwell@gmail.com)",
-              },
-            })
-        }
-        draggable
-        className="sidebar-node-label"
-      >
-        Pull SEC Data
-      </div>
-
-      <div
-        onDragStart={(e) =>
-          onDragStart(e, "dataNode", {
-            label: "POST User",
-            method: "POST",
-            endpoint: "https://data.sec.gov/submissions/CIK0000320193.json",
-            body: JSON.stringify({ name: "New User" }),
-          })
-        }
-        draggable
-        className="sidebar-node-label"
-      >
-        Data: POST User
-      </div>
+    <aside
+      style={{
+        padding: "1rem",
+        display: "flex",
+	width: "20vw",
+        flexDirection: "column",
+        gap: "1rem",
+      }}
+    >
+      <h4 style={{ marginBottom: "8px", color: "white", textAlign: "center" }}>Available Blocks</h4>
+      {nodeTemplates.map((tpl, i) => (
+        <div
+          key={i}
+          draggable
+          onDragStart={(event) =>
+            event.dataTransfer.setData(
+              "application/reactflow",
+              JSON.stringify(tpl)
+            )
+          }
+          style={{
+            padding: "10px",
+            borderRadius: "8px",
+            border: `2px solid ${tpl.method ? methodColors[tpl.method] : "#666"}`,
+            background: tpl.method ? `${methodColors[tpl.method]}20` : "#f0f0f0",
+            cursor: "grab",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            fontWeight: 600,
+            fontSize: "14px",
+            color: tpl.method ? methodColors[tpl.method] : "#333",
+            transition: "transform 0.1s ease",
+	    textAlign: "center",
+	    height: "5vh"
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          {tpl.label}
+          {tpl.endpoint && (
+            <div
+              style={{
+                fontSize: "10px",
+                color: "#555",
+                marginTop: "4px",
+                wordBreak: "break-word",
+              }}
+            >
+              {tpl.endpoint}
+            </div>
+          )}
+        </div>
+      ))}
     </aside>
   );
 }

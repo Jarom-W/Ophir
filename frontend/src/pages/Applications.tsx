@@ -24,21 +24,7 @@ const initialNodes: Node[] = [
     id: "1",
     type: "codeNode",
     data: { label: "App Start", code: `console.log("Start");`, isStart: true },
-    position: { x: 250, y: 0 },
-  },
-  {
-    id: "2",
-    type: "dataNode",
-    data: {
-      label: "Get Users",
-      method: "GET",
-      endpoint: "/api/users",
-      onExecute: (method, endpoint, body) => {
-        console.log("Executing:", method, endpoint, body);
-        // Example: fetch(endpoint, { method, body })
-      },
-    },
-    position: { x: 250, y: 150 },
+    position: { x: 300, y: 0 },
   },
 ];
 
@@ -55,6 +41,13 @@ export default function Applications() {
     [setEdges]
   );
 
+const updateNode = (id: string, updates: any) => {
+  setNodes(nds =>
+    nds.map(n =>
+      n.id === id ? { ...n, data: { ...n.data, ...updates } } : n
+    )
+  );
+};
   // Execute one code snippet
   const runCode = (code: string) => {
     try {
@@ -122,18 +115,13 @@ const runChain = (startId: string) => {
 
   executeNode(startId);
 };
-
-
-
-  const onDrop = useCallback(
-  (event: React.DragEvent) => {
+const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
     const reactFlowBounds = event.currentTarget.getBoundingClientRect();
     const raw = event.dataTransfer.getData("application/reactflow");
     if (!raw) return;
 
-    const { type, label, code, method, endpoint, body } = JSON.parse(raw);
-
+    const tpl = JSON.parse(raw);
     const position = {
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
@@ -141,35 +129,18 @@ const runChain = (startId: string) => {
 
     const newNode: Node = {
       id: (nodes.length + 1).toString(),
-      type,
+      type: tpl.type,
       position,
-      data:
-        type === "codeNode"
-          ? { label, code }
-          : {
-              label,
-              method,
-              endpoint,
-              body,
-              onExecute: (method: string, endpoint: string, body?: string) => {
-                fetch(endpoint, {
-                  method,
-                  headers: { "Content-Type": "application/json" },
-                  body: method !== "GET" ? body : undefined,
-                })
-                  .then((res) => res.json().catch(() => res.status))
-                  .then((json) => console.log("📡 Response:", json))
-                  .catch((err) => console.error("Fetch error:", err));
-              },
-            },
+      data: {
+        ...tpl,
+        onRun: runCode,
+        onRunChain: runChain,
+        onUpdate: updateNode,
+      },
     };
 
-    setNodes((nds) => nds.concat(newNode));
-  },
-  [nodes, setNodes]
-);
-
-
+    setNodes(nds => nds.concat(newNode));
+  }, [nodes]);
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -275,7 +246,8 @@ useEffect(() => {
 				data: {
 					...n.data,
 					onRun: runCode,
-					onRunChain: runChain
+					onRunChain: runChain,
+					onUpdate: updateNode,
 				},
 			  }))}
               edges={edges}

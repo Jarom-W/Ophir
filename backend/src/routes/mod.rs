@@ -4,6 +4,9 @@ use crate::models::{SearchParams, Company};
 use crate::error::AppError;
 use std::env;
 use serde_json::Value;
+use time::OffsetDateTime;
+use yahoo_finance_api as yahoo;
+use tokio_test;
 
 pub fn finance_routes() -> Router {
     Router::new()
@@ -11,6 +14,7 @@ pub fn finance_routes() -> Router {
         .route("/search", get(search_ticker))
         .route("/fundamentals", get(retrieve_fundamentals))
         .route("/last_quarter/:cik", get(last_quarter))
+        .route("/quote/:ticker", get(retrieve_quote))
 }
 /* Data fetching logic:
  * User queries a ticker for fundamentals
@@ -22,6 +26,24 @@ pub fn finance_routes() -> Router {
  */
 
 //SEC Fields: primaryDocDescription + tickers
+
+// Explore using Yahoo Finance in Rust for simple KPI automation like stock email list.
+
+//Write a quote endpoint.
+
+pub async fn retrieve_quote(axum::extract::Path(ticker): axum::extract::Path<String>) -> Result<impl IntoResponse, AppError> {
+    let provider = yahoo::YahooConnector::new().unwrap();
+
+    let response = provider
+        .get_latest_quotes(&ticker, "1d")
+        .await
+        .unwrap();
+
+    let quote = response.last_quote().unwrap();
+    let time: OffsetDateTime =
+        OffsetDateTime::from_unix_timestamp(quote.timestamp).unwrap();
+    Ok(Json(quote.close))
+}
 
 pub async fn last_quarter(axum::extract::Path(cik): axum::extract::Path<String>) -> Result<impl IntoResponse, AppError> {
     let url = format!("https://data.sec.gov/submissions/CIK{}.json", cik);
