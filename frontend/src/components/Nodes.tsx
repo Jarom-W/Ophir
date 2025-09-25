@@ -45,6 +45,37 @@ export default function CodeNode({ id, data }: NodeProps<CodeNodeData>) {
     </div>
   );
 }
+export function IfNode({ id, data }) {
+  const [condition, setCondition] = useState(data.condition || "");
+
+  return (
+    <div
+      style={{
+        padding: "0.5rem",
+        border: "2px solid #FF9800",
+        borderRadius: "8px",
+        background: "#FFF3E0",
+        minWidth: "150px",
+        color: "black"
+      }}
+    >
+      <div style={{ fontWeight: 600 }}>IF</div>
+      <input
+        type="text"
+        value={condition}
+        onChange={(e) => {
+          setCondition(e.target.value);
+          data.onUpdate?.(id, { condition: e.target.value });
+        }}
+        placeholder="Enter JS condition (e.g. x > 10)"
+        style={{ width: "100%", marginTop: "0.5rem" }}
+      />
+
+      <Handle type="target" position={Position.Top} id="in" />
+      <Handle type="source" position={Position.Bottom} id="out" />
+    </div>
+  );
+}
 
 export function DataNode({ id, data }: NodeProps<DataNodeData>) {
   const [dataSource, setDataSource] = useState(data.dataSource || "");

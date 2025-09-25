@@ -161,7 +161,7 @@ ul {
 /* Applications page styles */
 .main-container {
 	display: flex;
-	justify-content: center;
+	height: 100vh;
 }
 .container {
   display: grid;
@@ -251,6 +251,15 @@ ul {
   border-radius: .25rem;
   height: 15vh;
   width: 12vw;
+}
+.sidebar-wrapper {
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+}
+.reactflow-wrapper {
+  flex: 1;
+  height: 100%;
 }
 .sidebar-node-label:hover {
   transition: .2s;

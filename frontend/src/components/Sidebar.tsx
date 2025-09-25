@@ -1,4 +1,14 @@
+// Sidebar.tsx
 import React from "react";
+
+export type NodeTemplate = {
+  type: string;
+  label: string;
+  code?: string;
+  method?: string;
+  endpoint?: string;
+  body?: string;
+};
 
 const methodColors: Record<string, string> = {
   GET: "#4CAF50",
@@ -7,35 +17,30 @@ const methodColors: Record<string, string> = {
   DELETE: "#F44336",
 };
 
-const nodeTemplates = [
-  { type: "codeNode", label: "Logger", code: `console.log("Logging");` },
-  { type: "dataNode", label: "GET Data", method: "GET", endpoint: "" },
-  { type: "dataNode", label: "POST Data", method: "POST", endpoint: "", body: `{"key":"value"}` },
-  { type: "dataNode", label: "PUT Data", method: "PUT", endpoint: "", body: `{"update":"value"}` },
-  { type: "dataNode", label: "DELETE Data", method: "DELETE", endpoint: "" },
-];
+interface SidebarProps {
+  nodes: NodeTemplate[];
+}
 
-export default function Sidebar() {
+export default function Sidebar({ nodes }: SidebarProps) {
   return (
     <aside
       style={{
         padding: "1rem",
         display: "flex",
-	width: "20vw",
+        width: "20vw",
         flexDirection: "column",
         gap: "1rem",
       }}
     >
-      <h4 style={{ marginBottom: "8px", color: "white", textAlign: "center" }}>Available Blocks</h4>
-      {nodeTemplates.map((tpl, i) => (
+      <h4 style={{ marginBottom: "8px", color: "white", textAlign: "center" }}>
+        Available Blocks
+      </h4>
+      {nodes.map((tpl, i) => (
         <div
           key={i}
           draggable
           onDragStart={(event) =>
-            event.dataTransfer.setData(
-              "application/reactflow",
-              JSON.stringify(tpl)
-            )
+            event.dataTransfer.setData("application/reactflow", JSON.stringify(tpl))
           }
           style={{
             padding: "10px",
@@ -48,22 +53,15 @@ export default function Sidebar() {
             fontSize: "14px",
             color: tpl.method ? methodColors[tpl.method] : "#333",
             transition: "transform 0.1s ease",
-	    textAlign: "center",
-	    height: "5vh"
+            textAlign: "center",
+            height: "5vh",
           }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           {tpl.label}
           {tpl.endpoint && (
-            <div
-              style={{
-                fontSize: "10px",
-                color: "#555",
-                marginTop: "4px",
-                wordBreak: "break-word",
-              }}
-            >
+            <div style={{ fontSize: "10px", color: "#555", marginTop: "4px", wordBreak: "break-word" }}>
               {tpl.endpoint}
             </div>
           )}
