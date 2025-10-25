@@ -1,9 +1,30 @@
 :root {
-  --color-navy: #0d1b2a;
-  --color-gold: #e6c229;
-  --color-gray: #778da9;
-  --color-sand: #edf2f4;
-  --color-black: #000000;
+  --color-primary: #76CEC0;  /* soft teal */
+  --color-primary-dark: #4FA89B;  /* for hover states */
+  --color-primary-light: #A2E2D8; /* for backgrounds or subtle highlights */
+
+  --color-secondary: #3A5F8A; /* deep desaturated blue */
+  --color-secondary-dark: #2B486A;
+  --color-secondary-light: #628BB8;
+
+  --color-background: #F5F7F7;
+  --color-surface: #FFFFFF; /* for cards/panels */
+  --color-text: #2B2B2B;
+  --color-text-light: #555;
+  --color-border: #DDE3E3;
+
+  --color-hover: #5BA9A1;
+  --color-focus: #3A5F8A;
+  --color-disabled: #C8D3D3;
+
+  --color-accent: #CE767E;  /* complementary coral/pink accent */
+  --color-accent-dark: #A85159;
+  --color-accent-light: #E7A0A5;
+
+  --color-success: #6BBF7A;
+  --color-warning: #E2B66C;
+  --color-error: #D75A5A;
+  --color-info: #5A9ED7;
 }
 
 * {
@@ -15,17 +36,29 @@
 html {
 	font-size: 16px;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	background: linear-gradient(180deg, #0d1b2a,#15304D);
-	background-color: #0d1b2a;
-	color: gold;
+	background: linear-gradient(
+    120deg,
+    #F9FBFB 0%,
+    #E6F0EF 25%,
+    #D0E4E3 50%,
+    #E8F3F2 75%,
+    #F9FBFB 100%
+  );
+  background-size: 400% 400%;
+  animation: appGradientFlow 10s ease-in-out infinite;
 }
 
+@keyframes appGradientFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 h1, h2, h3, h4, h5 {
 	font-weight: 600;
 }
 
 a {
-	color: #1d4ed8;
+	color: var(--color-text);
 	text-direction: none;
 }
 
@@ -46,21 +79,22 @@ nav {
 
 nav a {
 	transition: .2s;
-	color: var(--color-gold);
+	color: var(--color-primary);
 	padding: .5rem;
 	border-radius: .25rem;
 	text-decoration: none;
-	font-size: 20px;
+	font-size: 1.5rem;
+	font-weight: 600;
 }
 
 nav a:hover {
-	color: #93c5fd;
+	color: white;
 	transition: .2s;
-	background: var(--color-sand);
+	background: var(--color-hover);
 	}
 
 button {
-	background-color: #1d4ed8;
+	background-color: #76CEC0;
 	color: white;
 	border:none;
 	padding: 0.5rem 1rem;
@@ -70,6 +104,19 @@ button {
 
 button:hover {
 	transition: 0.2s;
-	background-color: #2563eb;
+	background-color: var(--color-hover);
+}
+.links-array {
+	display: flex;
+	flex-direction: row;
+	gap:75rem;
+}
+.primary-links {
+	display: flex;
+	justify-content: left;
+}
+.logout-links {
+	display:flex;
+	justify-content: right;
 }
 

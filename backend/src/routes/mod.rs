@@ -4,9 +4,7 @@ use crate::models::{SearchParams, Company};
 use crate::error::AppError;
 use std::env;
 use serde_json::Value;
-use time::OffsetDateTime;
 use yahoo_finance_api as yahoo;
-use tokio_test;
 
 pub fn finance_routes() -> Router {
     Router::new()
@@ -40,8 +38,6 @@ pub async fn retrieve_quote(axum::extract::Path(ticker): axum::extract::Path<Str
         .unwrap();
 
     let quote = response.last_quote().unwrap();
-    let time: OffsetDateTime =
-        OffsetDateTime::from_unix_timestamp(quote.timestamp).unwrap();
     Ok(Json(quote.close))
 }
 
