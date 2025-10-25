@@ -1,6 +1,6 @@
 .dashboard-container {
   padding: 2rem;
-  color: gold;
+  color: var(--color-text);
 }
 
 h1 {
@@ -22,16 +22,16 @@ ul {
 .search-section input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #314d6a;
+  border: 1px solid var(--color-primary-light);
   border-radius: 4px;
-  background-color: #102437;
-  color: gold;
+  background-color: var(--color-background);
+  color: var(--color-text);
   font-size: 1rem;
   width: 50vw;
 }
 
 .search-section input::placeholder {
-  color: #bfae6f;
+  color: #var(--color-text-light);
 }
 .search-section input:hover {
 	transition: 0.15s;
@@ -39,7 +39,7 @@ ul {
 }
 
 .search-section button {
-  background-color: #1d4ed8;
+  background-color: var(--color-primary);
   color: white;
   padding: 0.5rem 1rem;
   border: none;
@@ -48,7 +48,7 @@ ul {
 }
 
 .search-section button:hover {
-  background-color: #2563eb;
+  background-color: var(--color-hover);
 
   transform: translate(0, -2px);
 
@@ -58,14 +58,14 @@ ul {
 	justify-content: center;
 }
 .search-results {
-	background-color: white;
+	background-color: var(--color-primary);
 	margin-bottom: 1rem;
 	border-radius: 4px;
 	width: 50vw;
 
 }
 .search-results-text {
-	color: black;
+	color: var(--color-text);
 	margin-left: 1rem;
 	text-align: left;
 }
@@ -79,16 +79,16 @@ ul {
 }
 
 .stat-card {
-  background-color: #15304D;
+  background-color: var(--color-background);
   padding: 1rem;
   border-radius: 6px;
   text-align: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
-  border: 1px solid #314d6a;
+  border: 1px solid var(--color-primary);
+  transition: 0.15s;
 }
 .stat-card:hover {
 	transition: 0.15s;
-	background-color: #1D4168;
+	background-color: var(--color-surface);
 
 	transform: translate(0, -2px);
 }
@@ -96,13 +96,13 @@ ul {
 
 .stat-card h3 {
   font-size: 0.9rem;
-  color: #bfae6f;
+  color: var(--color-text);
 }
 
 .stat-card p {
   font-size: 1.2rem;
   font-weight: bold;
-  color: gold;
+  color: var(--color-text-light);
 }
 
 /* Content Grid */
@@ -114,27 +114,27 @@ ul {
 }
 
 .content-card {
-  background-color: #15304D;
+  background-color: var(--color-background);
   padding: 1rem;
   border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
-  border: 1px solid #314d6a;
+  border: 1px solid var(--color-primary);
 }
 .content-card:hover {
 	transition: 0.15s;
-	background-color: #1D4168;
+	background-color: var(--color-hover);
+  color: white;
 
 	transform: translate(0, -2px);
 }
 
 .chart-placeholder {
   height: 200px;
-  background-color: #102437;
-  border: 1px dashed #314d6a;
+  background-color: var(--color-background);
+  border: 1px dashed var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #bfae6f;
+  color: var(--color-text);
 }
 
 /* News Section */
@@ -145,7 +145,7 @@ ul {
 
 .news-section li {
   margin-bottom: 0.5rem;
-  color: gold;
+  color: var(--color-text-light);
 }
 .company-title {
 	padding: 1rem;
@@ -215,7 +215,7 @@ ul {
 }
 .new-application:hover {
 	transition: .2s;
-	background-color: var(--color-navy);
+	background-color: var(--color-primary);
 
 }
 .app-container {
@@ -229,24 +229,24 @@ ul {
   justify-content: center;
 }
 .blocks-heading {
-  color: var(--color-sand);
+  color: var(--color-text);
   text-align: center;
 }
 .node-main {
-	background: var(--color-sand);
+	background: var(--color-background);
   padding: 1rem;
   border-radius: .25rem;
 }
 .node-header {
   text-align: center;
-  color: var(--color-navy);
+  color: var(--color-text);
   margin-bottom: .25rem;
 }
 .sidebar-node-label {
   transition: .2s;
   padding: .5rem;
   margin: .5rem;
-  background: var(--color-sand);
+  background: var(--color-background);
   cursor: "grab";
   border-radius: .25rem;
   height: 15vh;
@@ -263,7 +263,7 @@ ul {
 }
 .sidebar-node-label:hover {
   transition: .2s;
-  background-color: var(--color-gold);
+  background-color: var(--color-hover);
 }
 .nodes-sidebar {
   padding: 0;
