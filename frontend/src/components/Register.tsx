@@ -17,7 +17,7 @@ export default function Register() {
           className="auth-logo"
         />
 
-        <h1 className="auth-title">Sign in to Continue</h1>
+        <h1 className="auth-title">Register an Account</h1>
         <p className="auth-subtitle">Use your Google account to get started.</p>
 
         <div className="google-login-wrapper">

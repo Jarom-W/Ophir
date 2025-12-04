@@ -96,7 +96,10 @@
   color: #555;
   margin-bottom: 2rem;
 }
-
+.auth-subtitle-two {
+  font-size: 0.95rem;
+  color: var(--color-text-light);
+}
 /* Google button wrapper */
 .login-wrapper {
   display: flex;
