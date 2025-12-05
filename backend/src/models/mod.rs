@@ -19,7 +19,7 @@ pub struct PriceDrop {
 }
 #[derive(Deserialize)]
 pub struct SECQueryParams {
-    pub period: Option<String>,
+    pub period: String,
 }
 #[derive(Serialize)]
 pub struct ErrorResponse {
