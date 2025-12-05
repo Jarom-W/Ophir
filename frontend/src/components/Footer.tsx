@@ -6,7 +6,7 @@ export default function Footer() {
 			textAlign: "center",
 			padding: "1rem",
 			marginTop: "2rem",
-			color: "#ffffff",
+			color: "#2B2B2B",
 			fontSize: "0.9rem"
 		}}>
 		<p>&copy; {new Date().getFullYear()} . All rights reserved. </p>

@@ -10,7 +10,6 @@ export default function MainLayout() {
       <main style={{ padding: "1rem" }}>
         <Outlet /> 
       </main>
-      <Footer />
     </>
   );
 }

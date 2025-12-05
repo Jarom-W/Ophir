@@ -14,13 +14,16 @@ export default function Login() {
 
   async function handleSignUp() {
     const { error } = await supabase.auth.signUp({ email, password })
-    if (error) setError(error.message)
+    if (error) setError("Enter your email address and password, then click register!")
       else setMessage("Check your email for a confirmation link...")
   }
 
   async function handleSignIn() {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setError(error.message)
+    if (error){
+      setError(error.message);
+      console.log(API_URL);
+    } 
       else {
         setMessage('Sign in Successful!');
         navigate("/welcome");
@@ -38,15 +41,16 @@ export default function Login() {
         />
 
         <h1 className="auth-title">Sign in to Continue</h1>
-        <p className="auth-subtitle">Use your Google account to get started.</p>
+        <p className="auth-subtitle">Enter your email and password to get started.</p>
+
 
         <div className="login-wrapper">
           <input type="text" placeholder="Email Address" value={email} onChange={e => setEmail(e.target.value)} />
           <input placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
           <button className="sign-in" onClick={handleSignIn}>Sign In</button>
-        <nav className="register_link">
-          <Link to="/register" onClick={handleSignUp}>Don't have an account? Sign up!</Link> {" "}
-        </nav>
+
+        <p className="auth-subtitle-two">Don't have an account? Input your desired credentials and click 'Register' to sign up!</p>
+          <button onClick={handleSignUp}>Register</button>
        </div>
         <p className="error_msg">{error}</p>
       </div>
