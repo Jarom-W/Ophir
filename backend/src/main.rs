@@ -2,12 +2,12 @@ use axum::Router;
 use dotenvy::dotenv;
 use tokio::net::TcpListener;
 use tower_http::cors::{CorsLayer, Any};
-use crate::models::{PriceDrop, StockData, Criterion, Alert};
 
 pub mod routes;
 pub mod models;
 pub mod utils;
 pub mod error;
+pub mod criteria;
 
 #[tokio::main]
 async fn main() {
