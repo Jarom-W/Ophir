@@ -1,72 +1,80 @@
-// Sidebar.tsx
 import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Bell,
+  BarChart2,
+  Briefcase,
+  Info,
+  LogOut,
+  TrendingUp,
+} from "lucide-react";
 
-export type NodeTemplate = {
-  type: string;
-  label: string;
-  code?: string;
-  method?: string;
-  endpoint?: string;
-  body?: string;
-};
+const NAV_LINKS = [
+  { to: "/welcome",  label: "Home",        icon: LayoutDashboard },
+  { to: "/finance",  label: "Dashboard",   icon: BarChart2       },
+  { to: "/services", label: "Alerts",      icon: Bell            },
+  { to: "/apps",     label: "Tools",       icon: Briefcase       },
+  { to: "/about",    label: "About",       icon: Info            },
+];
 
-const methodColors: Record<string, string> = {
-  GET: "#4CAF50",
-  POST: "#2196F3",
-  PUT: "#FFC107",
-  DELETE: "#F44336",
-};
+export default function Sidebar() {
+  const navigate = useNavigate();
 
-interface SidebarProps {
-  nodes: NodeTemplate[];
-}
+  const handleLogout = () => {
+    // Clear session, redirect to login
+    navigate("/");
+  };
 
-export default function Sidebar({ nodes }: SidebarProps) {
   return (
-    <aside
-      style={{
-        padding: "1rem",
-        display: "flex",
-        width: "20vw",
-        flexDirection: "column",
-        gap: "1rem",
-      }}
-    >
-      <h4 style={{ marginBottom: "8px", color: "white", textAlign: "center" }}>
-        Available Blocks
-      </h4>
-      {nodes.map((tpl, i) => (
-        <div
-          key={i}
-          draggable
-          onDragStart={(event) =>
-            event.dataTransfer.setData("application/reactflow", JSON.stringify(tpl))
-          }
-          style={{
-            padding: "10px",
-            borderRadius: "8px",
-            border: `2px solid ${tpl.method ? methodColors[tpl.method] : "#666"}`,
-            background: tpl.method ? `${methodColors[tpl.method]}20` : "#f0f0f0",
-            cursor: "grab",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-            fontWeight: 600,
-            fontSize: "14px",
-            color: tpl.method ? methodColors[tpl.method] : "#333",
-            transition: "transform 0.1s ease",
-            textAlign: "center",
-            height: "5vh",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          {tpl.label}
-          {tpl.endpoint && (
-            <div style={{ fontSize: "10px", color: "#555", marginTop: "4px", wordBreak: "break-word" }}>
-              {tpl.endpoint}
-            </div>
-          )}
+    <aside className="sidebar">
+      {/* Logo */}
+      <div className="sidebar-logo">
+        <div className="sidebar-logo-mark">
+          <TrendingUp size={18} color="var(--amber-400)" />
+          Trade<span className="accent">Step</span>
         </div>
-      ))}
+        <p className="sidebar-tagline">Institutional Screening</p>
+      </div>
+
+      {/* Navigation */}
+      <nav className="sidebar-section">
+        <p className="sidebar-section-label">Navigation</p>
+        {NAV_LINKS.map(({ to, label, icon: Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+          >
+            <Icon className="nav-icon" />
+            {label}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div className="sidebar-footer">
+        <div className="user-chip">
+          <div className="user-avatar">JD</div>
+          <div className="user-info">
+            <p className="user-name">John Doe</p>
+            <p className="user-plan">Pro Plan</p>
+          </div>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="nav-link btn-ghost"
+          style={{
+            width: "100%",
+            marginTop: "0.5rem",
+            color: "var(--slate-300)",
+            fontSize: "0.8rem",
+          }}
+        >
+          <LogOut size={14} className="nav-icon" />
+          Sign Out
+        </button>
+      </div>
     </aside>
   );
 }
